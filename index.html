@@ -62,6 +62,7 @@
             justify-content: space-between;
             padding: 16px 0;
             margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -75,8 +76,158 @@
 
         .header-actions {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             align-items: center;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .header-btn:hover {
+            background-color: var(--hover-bg);
+            border-color: var(--primary-color);
+        }
+
+        .header-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .header-btn.primary:hover {
+            background: rgba(56, 139, 253, 0.8);
+        }
+
+        .layout-toggle {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .layout-btn {
+            padding: 6px 12px;
+            background: var(--bg-color);
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .layout-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .layout-btn:hover:not(.active) {
+            background: var(--hover-bg);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            font-size: 12px;
+            color: var(--icon-color);
+        }
+
+        .status-left, .status-right {
+            display: flex;
+            gap: 16px;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 200px);
+        }
+
+        .main-content.split-view .editor-section {
+            flex: 1;
+        }
+
+        .main-content.split-view .preview-section {
+            flex: 1;
+            display: block;
+        }
+
+        .main-content.modal-view .editor-section {
+            flex: 1;
+        }
+
+        .main-content.modal-view .preview-section {
+            display: none;
+        }
+
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-section {
+            display: none;
+            flex-direction: column;
+        }
+
+        .preview-section .panel-header {
+            border-left: none;
+        }
+
+        .preview-section .preview-frame {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header-actions {
+                gap: 8px;
+            }
+            
+            .header-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .main-content.split-view {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .main-content.split-view .editor-section,
+            .main-content.split-view .preview-section {
+                flex: none;
+            }
+            
+            .status-left, .status-right {
+                gap: 8px;
+            }
         }
 
         .editor-container {
@@ -119,7 +270,7 @@
             background: transparent;
             color: transparent;
             caret-color: var(--cursor-color);
-            caret-width: 2px:
+            caret-width: 2px;
             resize: none;
             outline: none;
             border: none;
@@ -379,10 +530,45 @@
 <body>
     <div class="container">
         <header>
-
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                HTML Editor
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" id="newBtn">
+                    <i class="fas fa-file"></i> New
+                </button>
+                <button class="header-btn" id="saveBtn">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="header-btn" id="loadBtn">
+                    <i class="fas fa-folder-open"></i> Load
+                </button>
+                <button class="header-btn" id="exportBtn">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <div class="layout-toggle">
+                    <button class="layout-btn active" id="modalViewBtn">
+                        <i class="fas fa-window-maximize"></i> Modal
+                    </button>
+                    <button class="layout-btn" id="splitViewBtn">
+                        <i class="fas fa-columns"></i> Split
+                    </button>
+                </div>
+                <button class="header-btn" id="formatBtn">
+                    <i class="fas fa-magic"></i> Format
+                </button>
+                <button class="header-btn" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="header-btn" id="helpBtn">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
         </header>
        
-        <div class="editor-container">
+        <div class="main-content modal-view" id="mainContent">
+            <div class="editor-section">
             <div class="panel-header">
                 <div class="panel-title">Editor</div>
                 <div class="panel-actions">
@@ -432,7 +618,7 @@
   &lt;div id="editor" style="white-space:pre-wrap; line-height:1.6;"&gt;&lt;/div&gt;
 
   &lt;script&gt;
-    const code = `Welcome to our HTML Editor. HTML Code for begginning!`;
+    const code = `Welcome to HTML Editor! Start coding amazing web pages.`;
 
     const container = document.getElementById('editor');
     let i = 0;
@@ -455,6 +641,29 @@
 &lt;/html&gt;</textarea>
                     <div id="highlighting"></div>
                 </div>
+            </div>
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span id="cursorPosition">Line 1, Column 1</span>
+                        <span id="fileStatus">Untitled</span>
+                    </div>
+                    <div class="status-right">
+                        <span id="charCount">0 characters</span>
+                        <span id="lineCount">1 lines</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <div class="panel-header">
+                    <div class="panel-title">Live Preview</div>
+                    <div class="panel-actions">
+                        <button class="panel-btn" id="refreshPreviewBtn">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <iframe class="preview-frame" id="live-preview-frame"></iframe>
             </div>
         </div>
     </div>
